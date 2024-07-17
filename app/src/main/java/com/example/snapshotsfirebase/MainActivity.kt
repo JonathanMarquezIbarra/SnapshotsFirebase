@@ -14,12 +14,12 @@ class MainActivity : AppCompatActivity() {
 
     private val RC_SIGN_IN = 21
 
-    private lateinit var mBinding : ActivityMainBinding
+    private lateinit var mBinding: ActivityMainBinding
 
-    private lateinit var mActiveFragment : Fragment
-    private lateinit var mFragmentManager : FragmentManager
+    private lateinit var mActiveFragment: Fragment
+    private lateinit var mFragmentManager: FragmentManager
 
-    private lateinit var mAuthListener : FirebaseAuth.AuthStateListener
+    private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
     private var mFirebaseAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        //setupAuth()
+        setupAuth()
         setupBottomNav()
     }
 
@@ -36,19 +36,20 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAuth = FirebaseAuth.getInstance()
         mAuthListener = FirebaseAuth.AuthStateListener {
             val user = it.currentUser
-            if (user == null){
-                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                    .setAvailableProviders(
-                        Arrays.asList(
-                            AuthUI.IdpConfig.EmailBuilder().build(),
-                            AuthUI.IdpConfig.GoogleBuilder().build())
-
-                    ).build(), RC_SIGN_IN)
+            if (user == null) {
+                startActivityForResult(
+                    AuthUI.getInstance().createSignInIntentBuilder()
+                        .setAvailableProviders(
+                            Arrays.asList(
+                                AuthUI.IdpConfig.EmailBuilder().build(),
+                                //AuthUI.IdpConfig.GoogleBuilder().build()
+                            )
+                        ).build(), RC_SIGN_IN)
             }
         }
     }
 
-    private fun setupBottomNav(){
+    private fun setupBottomNav() {
         mFragmentManager = supportFragmentManager
 
         val homeFragment = HomeFragment()
@@ -70,22 +71,28 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         mBinding.bottomNav.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.action_home -> {
-                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment)
+                        .commit()
                     mActiveFragment = homeFragment
                     true
                 }
+
                 R.id.action_add -> {
-                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment)
+                        .commit()
                     mActiveFragment = addFragment
                     true
                 }
+
                 R.id.action_profile -> {
-                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment)
+                        .commit()
                     mActiveFragment = profileFragment
                     true
                 }
+
                 else -> false
             }
         }

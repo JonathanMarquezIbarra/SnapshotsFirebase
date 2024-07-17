@@ -1,8 +1,13 @@
+
 plugins {
-    alias(libs.plugins.android.application)
+    /*alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
-    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.gms.google.services)*/
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -63,7 +68,9 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     //ksp ("com.github.bumptech.glide:ksp:4.16.0")
-    implementation ("com.github.bumptech.glide:ksp:4.16.0")
+    //implementation ("com.github.bumptech.glide:ksp:4.16.0")
+    ksp ("com.github.bumptech.glide:ksp:4.16.0")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
