@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.core.Context
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), HomeAux {
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
@@ -109,6 +109,10 @@ class HomeFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         mFirebaseAdapter.stopListening()
+    }
+
+    override fun goToTop() {
+        mBinding.recyclerView.smoothScrollToPosition(0)
     }
 
     private fun deleteSnapshot(snapshot: Snapshot) {
