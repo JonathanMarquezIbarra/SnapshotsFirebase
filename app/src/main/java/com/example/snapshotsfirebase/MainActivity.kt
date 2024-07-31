@@ -3,6 +3,7 @@ package com.example.snapshotsfirebase
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -12,7 +13,6 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Arrays
 
-@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private val RC_SIGN_IN = 21
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name)
             .commit()
 
-        mBinding.bottomNav.setOnNavigationItemSelectedListener {
+        mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
                     mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment)
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mBinding.bottomNav.setOnNavigationItemReselectedListener {
+        mBinding.bottomNav.setOnItemReselectedListener {
             when (it.itemId){
                 R.id.action_home -> (homeFragment as HomeAux).goToTop()
             }
@@ -118,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         mFirebaseAuth?.removeAuthStateListener(mAuthListener)
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

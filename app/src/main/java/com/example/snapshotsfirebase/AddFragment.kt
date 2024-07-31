@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.snapshotsfirebase.databinding.FragmentAddBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -18,9 +19,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
 
-@Suppress("DEPRECATION")
 class AddFragment : Fragment() {
-    private val RC_GALLERY = 18
     private val PATH_SNAPSHOT = "snapshots"
 
     private lateinit var mBinding: FragmentAddBinding
@@ -28,6 +27,19 @@ class AddFragment : Fragment() {
     private lateinit var mDatabaseReference: DatabaseReference
 
     private var mPhotoSelectedUri: Uri? = null
+
+    private val galleryResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                mPhotoSelectedUri = it.data?.data
+
+                with(mBinding) {
+                    imgPhoto.setImageURI(mPhotoSelectedUri)
+                    tilTitle.visibility = View.VISIBLE
+                    tvMessage.text = getString(R.string.post_message_valid_title)
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +60,8 @@ class AddFragment : Fragment() {
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, RC_GALLERY)
+        //startActivityForResult(intent, RC_GALLERY)
+        galleryResult.launch(intent)
     }
 
     private fun postSnapshot() {
@@ -76,7 +89,7 @@ class AddFragment : Fragment() {
                         mBinding.tvMessage.text = getString(R.string.post_message_title)
                     }
                 }
-                .addOnFailureListener{
+                .addOnFailureListener {
                     Snackbar.make(
                         mBinding.root, "No se pudo subir, intente más tarde", Snackbar.LENGTH_SHORT
                     ).show()
@@ -90,6 +103,7 @@ class AddFragment : Fragment() {
 
     }
 
+    /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -100,6 +114,6 @@ class AddFragment : Fragment() {
                 mBinding.tvMessage.text = getString(R.string.post_message_valid_title)
             }
         }
-    }
+    }*/
 
 }
